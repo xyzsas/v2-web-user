@@ -3,64 +3,60 @@
     <div class="box form">
       <h1 class="title" style="margin-bottom: 16px">学生事务系统</h1>
       <p class="tip">登录</p>
-      <div
-        :style="{ opacity: formVisible ? '1' : '0' }"
-        style="transition: all 0.5s ease"
-        v-show="step === 'username'"
-      >
-        <div class="control has-icons-left" style="margin-bottom: 24px">
-          <input
-            class="input is-primary is-medium"
-            style="width: 280px"
-            type="text"
-            placeholder="用户名"
-            v-model="username"
-            @keyup.enter="confirmUsername"
-          />
-          <span class="icon is-left">
-            <i class="mdi mdi-24px mdi-account-circle"></i>
-          </span>
-          <p class="message" :style="{ 'color': msg.color }">{{ msg.text }}</p>
+      <transition name="fade" mode="out-in">
+        <div v-if="step === 'username'">
+          <div class="control has-icons-left" style="margin-bottom: 24px">
+            <input
+              class="input is-primary is-medium"
+              style="width: 280px"
+              type="text"
+              placeholder="用户名"
+              v-model="username"
+              @keyup.enter="confirmUsername"
+            />
+            <span class="icon is-left">
+              <i class="mdi mdi-24px mdi-account-circle"></i>
+            </span>
+            <p class="message" :style="{ 'color': msg.color }">{{ msg.text }}</p>
+          </div>
+
+          <button
+            class="button is-primary is-rounded is-medium"
+            :disabled="!username"
+            :class="{ 'is-loading': loading }"
+            @click="confirmUsername"
+          >
+            <i class="mdi mdi-24px mdi-arrow-right"></i>
+          </button>
         </div>
 
-        <button
-          class="button is-primary is-rounded is-medium"
-          :class="{ 'is-loading': loading }"
-          @click="confirmUsername"
-        >
-          <i class="mdi mdi-24px mdi-arrow-right"></i>
-        </button>
-      </div>
+        <div v-else>
+          <div class="control has-icons-left" style="margin-bottom: 24px">
+            <input
+              class="input is-primary is-medium"
+              style="width: 280px"
+              type="password"
+              placeholder="密码"
+              v-model="password"
+              @keyup.enter="confirmPassword"
+              ref="input"
+            />
+            <span class="icon is-left">
+              <i class="mdi mdi-24px mdi-key"></i>
+            </span>
+            <p class="message" :style="{ 'color': msg.color }">{{ msg.text }}</p>
+          </div>
 
-      <div
-        :style="{ opacity: formVisible ? '1' : '0' }"
-        style="transition: all 0.5s ease"
-        v-show="step === 'password'"
-      >
-        <div class="control has-icons-left" style="margin-bottom: 24px">
-          <input
-            class="input is-primary is-medium"
-            style="width: 280px"
-            type="password"
-            placeholder="密码"
-            v-model="password"
-            @keyup.enter="confirmPassword"
-            ref="input"
-          />
-          <span class="icon is-left">
-            <i class="mdi mdi-24px mdi-key"></i>
-          </span>
-          <p class="message" :style="{ 'color': msg.color }">{{ msg.text }}</p>
+          <button
+            class="button is-primary is-rounded is-medium"
+            :disabled="!password"
+            :class="{ 'is-loading': loading }"
+            @click="confirmPassword"
+          >
+            <i class="mdi mdi-24px mdi-check"></i>
+          </button>
         </div>
-
-        <button
-          class="button is-primary is-rounded is-medium"
-          :class="{ 'is-loading': loading }"
-          @click="confirmPassword"
-        >
-          <i class="mdi mdi-24px mdi-check"></i>
-        </button>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -90,7 +86,6 @@ const clearMsg = () => {
 }
 
 ref: loading = false
-ref: formVisible = true
 
 ref: username = ''
 ref: password = ''
@@ -116,19 +111,16 @@ const confirmUsername = async () => {
     msg.err = true
     return
   }
-  formVisible = false
   await new Promise((resolve) => setTimeout(resolve, 1000))
   step = 'password'
   clearMsg()
   loading = false
-  formVisible = true
-  await nextTick()
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   input.focus()
 }
 
 const confirmPassword = async () => {
   loading = true
-  
   try {
     msg.text = '正在验证您的身份...'
     msg.err = false
@@ -156,10 +148,26 @@ const confirmPassword = async () => {
     msg.text = '网络错误'
     msg.err = true
     if (err.response) msg.text = err.response.data
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    step = 'username'
+    clearMsg()
+    username = password = ''
+    loading = false
   }
-  
 }
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
 
 <style scoped>
 div.login {
