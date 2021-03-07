@@ -26,7 +26,9 @@
             :class="{ 'is-loading': loading }"
             @click="confirmUsername"
           >
-            <i class="mdi mdi-24px mdi-arrow-right"></i>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-arrow-right"></i>
+            </span>
           </button>
         </div>
 
@@ -53,7 +55,9 @@
             :class="{ 'is-loading': loading }"
             @click="confirmPassword"
           >
-            <i class="mdi mdi-24px mdi-check"></i>
+            <span class="icon">
+              <i class="mdi mdi-24px mdi-check"></i>
+            </span>
           </button>
         </div>
       </transition>
@@ -78,7 +82,7 @@ ref: step = 'username'
 const msg = reactive({
   text: '',
   err: false,
-  color: computed(() => msg.err ? '#f5222d' : '#00c4a7')
+  color: computed(() => msg.text ? (msg.err ? '#f5222d' : '#00c4a7') : '#fff')
 })
 const clearMsg = () => {
   msg.text = ''
@@ -195,6 +199,7 @@ p.message {
   text-align: left;
   font-size: 0.8em;
   height: 0.8em;
+  transition: all 0.5s ease;
 }
 .form {
   height: 310px;
