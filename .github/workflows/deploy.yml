@@ -25,7 +25,9 @@ jobs:
         endpoint: oss-cn-shanghai.aliyuncs.com
         access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
         access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-    - name: Delete Old Files
+    - name: Delete Old assets
       run: ossutil rm -rf oss://xyzsas/assets/
+    - name: Delete Old index.html
+      run: ossutil rm -rf oss://xyzsas/index.html
     - name: Upload files to OSS
       run: ossutil cp -rf ./dist oss://xyzsas/
