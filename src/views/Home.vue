@@ -2,7 +2,7 @@
   <div class="container content">
     <h1>{{ greet }}，{{ SS.name }}！</h1>
 
-    <div class="field has-addons is-fullwidth">
+    <div class="field has-addons is-fullwidth" v-if="SS.token">
       <p class="control">
         <button class="button is-primary">
           <span class="icon">
@@ -41,7 +41,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import axios from '../plugins/axios'
@@ -52,37 +51,28 @@ const SS = window.sessionStorage
 ref: msg = []
 ref: loading = true
 
+if (!SS.token) router.push('/login')
+else axios // get messages
+  .get('/msg', { headers: { token: SS.token } })
+  .then(({ data }) => {
+    loading = false
+    msg = data.map(x => x.split('$$'))
+  })
+  .catch(err => {
+    Swal.fire({
+      text: err.response ? err.response.data : '网络错误',
+      icon: 'error',
+      willClose: () => { router.push('/login') }
+    })
+  })
+
 const greet = (() => {
   const h = new Date().getHours()
+  if (h < 11) return '早上好'
   if (h >= 11 && h < 13) return '中午好'
   if (h >= 13 && h < 18) return '下午好'
   if (h >= 18) return '晚上好'
 })()
-
-onMounted(async () => {
-  if (!SS.token) {
-    router.push('/login')
-    return
-  }
-  try {
-    const { data } = await axios.get('/msg', {
-      headers: { token: SS.token }
-    })
-    loading = false
-    for (let i of data) {
-      msg.push(i.split('$$'))
-    }
-  } catch(err) {
-    Swal.fire({
-      text: err.response ? err.response.data : '网络错误',
-      icon: 'error',
-      willClose: () => {
-        router.push('/login')
-      }
-    })
-  }
-})
-
 </script>
 
 <style scoped>
