@@ -1,6 +1,7 @@
 <template>
   <div class="container content">
     <h1>{{ greet }}，{{ SS.name }}！</h1>
+    <p>用户组：<code>{{ SS.group }}</code></p>
 
     <div class="field has-addons is-fullwidth" v-if="SS.token">
       <p class="control">
@@ -24,11 +25,12 @@
           <span class="icon">
             <i class="mdi mdi-monitor-dashboard"></i>
           </span>
+          <span>管理后台</span>
         </button>
       </p>
     </div>
 
-    <h3 v-if="loading" style="text-align: center">加载中</h3>
+    <h3 v-if="loading" style="text-align: center">加载中...</h3>
     <h3 v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</h3>
 
     <div v-for="(i, key) in msg" :key="key" class="box content" style="margin-bottom: 24px; max-width: 500px;">

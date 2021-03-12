@@ -1,8 +1,8 @@
 <template>
   <div class="login box">
     <div class="box form">
-      <h1 class="title" style="margin-bottom: 16px">学生事务系统</h1>
-      <p class="tip">登录</p>
+      <h1 class="title is-spaced">学生事务系统</h1>
+      <p class="subtitle">登录</p>
       <transition name="fade" mode="out-in">
         <div v-if="step === 'username'">
           <div class="control has-icons-left" style="margin-bottom: 24px">
@@ -67,15 +67,11 @@
 
 <script setup>
 import { computed, reactive, watch, nextTick } from 'vue'
-import Hashes from 'jshashes'
 
 import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
+const router = useRouter(), route = useRoute()
 import axios from '../plugins/axios'
-
-const md5 = (msg) => new Hashes.MD5().b64(msg).substr(7, 10).replace(/\//g, '_').replace(/\+/g, '-')
-const sha256 = (msg) => new Hashes.SHA256().b64(msg + 'XYZSAS_STATIC_SALT')
+import { md5, sha256 } from '../plugins/convention'
 
 ref: step = 'username'
 
@@ -184,14 +180,6 @@ div.login {
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-p.tip {
-  position: relative;
-  font-size: 1.2em;
-  font-weight: bold;
-  width: 100%;
-  color: #555;
-  margin: 10px 0 20px;
 }
 p.message {
   background: #fff;
