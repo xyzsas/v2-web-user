@@ -5,7 +5,7 @@
 
     <div class="field has-addons is-fullwidth" v-if="SS.token">
       <p class="control">
-        <button class="button is-primary">
+        <button class="button is-primary" @click="router.push('/center')">
           <span class="icon">
             <i class="mdi mdi-account-box-multiple"></i>
           </span>
@@ -13,7 +13,7 @@
         </button>
       </p>
       <p class="control">
-        <button class="button">
+        <button class="button" @click="router.push('/password')">
           <span class="icon">
             <i class="mdi mdi-key"></i>
           </span>
@@ -21,7 +21,7 @@
         </button>
       </p>
       <p class="control" v-show="SS.role === 'ADMIN'">
-        <button class="button is-danger">
+        <button class="button is-danger" @click="location.href='/admin'">
           <span class="icon">
             <i class="mdi mdi-monitor-dashboard"></i>
           </span>
@@ -30,8 +30,8 @@
       </p>
     </div>
 
-    <h3 v-if="loading" style="text-align: center">加载中...</h3>
-    <h3 v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</h3>
+    <p v-if="loading" style="text-align: center">加载中...</p>
+    <p v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</p>
 
     <div v-for="(i, key) in msg" :key="key" class="box content" style="margin-bottom: 24px; max-width: 500px;">
       <h4 v-if="i[0]">{{ i[0] }}</h4>
@@ -49,6 +49,7 @@ import axios from '../plugins/axios'
 
 const router = useRouter()
 const SS = window.sessionStorage
+const location = window.location
 
 ref: msg = []
 ref: loading = true
