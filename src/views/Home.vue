@@ -1,9 +1,9 @@
 <template>
-  <div class="container content">
+  <div class="container content" v-if="SS.token">
     <h1>{{ greet }}，{{ SS.name }}！</h1>
     <p>用户组：<code>{{ SS.group }}</code></p>
 
-    <div class="field has-addons is-fullwidth" v-if="SS.token">
+    <div class="field has-addons is-fullwidth">
       <p class="control">
         <button class="button is-primary" @click="router.push('/center')">
           <span class="icon">
