@@ -1,3 +1,6 @@
 <template>
-Page for Change Password
+  <div class="box">
+    修改密码
+    
+  </div>
 </template>
