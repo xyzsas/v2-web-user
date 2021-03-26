@@ -98,6 +98,16 @@ async function uploadImage () {
   msg = ''
 }
 
+function toBlob (data) {
+  const byteString = atob(data.split(',')[1])
+  const mimeString = data.split(',')[0].split(':')[1].split(';')[0]
+  const ia = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  return new Blob([ia], { type: mimeString })
+}
+
 async function submit () {
   const data = canvas.toDataURL('image/png')
   function catchErr (e) {
@@ -110,11 +120,11 @@ async function submit () {
     .catch(catchErr)
   if (!url) return
   try {
-    await axios.put(url, data, { headers: { 'Content-Type': 'image/png' } })
+    await axios.put(url, toBlob(data), { headers: { 'Content-Type': 'image/png' } })
     Swal.fire('成功', '照片上传成功', 'success')
       .then(() => { router.push('/') })
   } catch (e) {
-    Swal.fire('错误', e.response ? e.response.data : e.toString, 'error')
+    Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
     msg = ''
   }
 }
