@@ -16,6 +16,10 @@ const routes = [
   {
     path: '/center',
     component: () => import('./views/Center.vue')
+  },
+  {
+    path: '/photo',
+    component: () => import('./views/Photo.vue')
   }
 ]
 
