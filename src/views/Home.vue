@@ -21,7 +21,7 @@
         </button>
       </p>
       <p class="control" v-show="SS.role === 'ADMIN'">
-        <button class="button is-danger" @click="location.href='/admin'">
+        <button class="button is-danger" @click="admin">
           <span class="icon">
             <i class="mdi mdi-monitor-dashboard"></i>
           </span>
@@ -76,6 +76,10 @@ const greet = (() => {
   if (h >= 13 && h < 18) return '下午好'
   if (h >= 18) return '晚上好'
 })()
+
+function admin () {
+  window.open('/admin/', '/admin/', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=800')
+}
 </script>
 
 <style scoped>
