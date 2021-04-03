@@ -78,7 +78,7 @@ const greet = (() => {
 })()
 
 function admin () {
-  window.open('/admin/', '/admin/', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=800')
+  window.open('/admin/', '/admin/', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=0,height=600,width=800')
 }
 </script>
 
