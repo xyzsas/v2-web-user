@@ -32,17 +32,20 @@
 
     <p v-if="loading" style="text-align: center">加载中...</p>
     <p v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</p>
-
-    <div v-for="(i, key) in msg" :key="key" class="box content" style="margin-bottom: 24px; max-width: 500px;">
-      <h4 v-if="i[0]">{{ i[0] }}</h4>
-      <p v-if="i[1]">{{ i[1] }}</p>
-      <a v-if="i[2]" class="button is-fullwidth is-outlined is-primary" :href="i[2]">点击前往</a>    
+    <div class="columns is-tablet">
+      <div class="column" v-for="c in columns">
+        <div v-for="i in c" class="box">
+          <h4 v-if="i[0]">{{ i[0] }}</h4>
+          <p v-if="i[1]">{{ i[1] }}</p>
+          <a v-if="i[2]" class="button is-fullwidth is-outlined is-primary" :href="i[2]">点击前往</a>    
+        </div>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import axios from '../plugins/axios'
@@ -52,6 +55,16 @@ const SS = window.sessionStorage
 const location = window.location
 
 ref: msg = []
+const columns = computed(() => {
+  const res = [[], [], []]
+  let cot = 0
+  for (const m of msg) {
+    res[cot].push(m)
+    cot++
+    cot %= 3
+  }
+  return res
+})
 ref: loading = true
 
 if (!SS.token) router.push('/login')
@@ -60,6 +73,7 @@ else axios // get messages
   .then(({ data }) => {
     loading = false
     msg = data.map(x => x.split('$$'))
+    msg.reverse()
   })
   .catch(err => {
     Swal.fire({
@@ -85,7 +99,6 @@ function admin () {
 <style scoped>
 div.container {
   width: 100%;
-  max-width: 500px;
   height: 100vh;
   padding: 24px;
 }
