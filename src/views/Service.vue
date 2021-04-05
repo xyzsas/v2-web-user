@@ -32,7 +32,11 @@ async function catchErr (e) {
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
   if (!e.response) return
   switch (e.response.status) {
-    case 404: return router.push('/')
+    case 404: {
+      if (SS.token) router.push('/')
+      else router.push('/login?c=' + encodeURIComponent('/#/@/' + route.params.id))
+      return
+    }
   }
   fetch()
 }
