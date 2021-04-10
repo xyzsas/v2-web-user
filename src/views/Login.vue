@@ -104,7 +104,7 @@ const confirmUsername = async () => {
   msg.text = '安全检查中，请耐心等待'
   const id = md5(username)
   try {
-    const res = await axios.get('/auth?id=' + id)
+    const res = await axios.get('/auth/' + id)
     random = res.data
   } catch {
     msg.text = '网络错误，请稍后重试'
@@ -124,7 +124,7 @@ const confirmPassword = async () => {
   try {
     msg.text = '正在验证您的身份...'
     msg.err = false
-    const { data } = await axios.post('/auth', {
+    const { data } = await axios.post('/auth/', {
       random,
       password: sha256(sha256(password) + random)
     })

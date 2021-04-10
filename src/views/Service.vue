@@ -43,7 +43,7 @@ async function catchErr (e) {
 
 async function fetch () {
   try {
-    const res = await axios.get('/service?id=' + route.params.id, { headers: { token: SS.token } })
+    const res = await axios.get('/service/' + route.params.id, { headers: { token: SS.token } })
     const a = res.data
     a.variables = {}
     for (const k in a) {

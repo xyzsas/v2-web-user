@@ -96,11 +96,11 @@ const catchErr = e => {
 async function submit () {
   if (!oldpwd || !newpwd || repeat != newpwd) return
   loading = true
-  const random = await axios.get('/auth?id=' + SS.id)
+  const random = await axios.get('/auth/' + SS.id)
     .then(({ data }) => data)
     .catch(catchErr)
   if (!random) return
-  await axios.put('/auth', {
+  await axios.put('/auth/', {
     random,
     password: sha256(sha256(oldpwd) + random),
     newPassword: sha256(newpwd)
