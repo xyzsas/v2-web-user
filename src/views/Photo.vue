@@ -58,16 +58,13 @@ async function init () {
 init()
 
 async function uploadImage () {
-  msg = '正在处理...'
+  msg = '正在分析人脸与图片尺寸...'
   ok = false
   const imgFile = document.getElementById('upload').files[0]
   const img = await faceapi.bufferToImage(imgFile)
   source.src = img.src
   await new Promise(r => setTimeout(r, 2000))
-  const start = Date.now()
-  msg = '正在分析人脸...'
   const d = await faceapi.detectSingleFace(img)
-  if (Date.now() - start < 3000) await new Promise(r => setTimeout(r, 2000))
   console.log(d)
   if (!d) {
     Swal.fire('人脸识别失败', '请重新选择图片', 'error')
@@ -115,7 +112,7 @@ async function submit () {
     return false
   }
   msg = '正在提交，请耐心等待...'
-  const url = await axios.post('/store', { type: 'photo' }, opt)
+  const url = await axios.post('/store/photo', {}, opt)
     .then(({ data }) => data)
     .catch(catchErr)
   if (!url) return

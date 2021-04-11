@@ -69,18 +69,16 @@ ref: loading = true
 
 if (!SS.token) router.push('/login')
 else axios // get messages
-  .get('/msg', { headers: { token: SS.token } })
+  .get('/msg/', { headers: { token: SS.token } })
   .then(({ data }) => {
     loading = false
-    msg = data.map(x => x.split('$$'))
+    msg = []
+    for (const k in data) msg.push(data[k].split('$$'))
     msg.reverse()
   })
-  .catch(err => {
-    Swal.fire({
-      text: err.response ? err.response.data : '网络错误',
-      icon: 'error',
-      willClose: () => { router.push('/login') }
-    })
+  .catch(async err => {
+    await Swal.fire('错误', err.response ? err.response.data : '网络错误', 'error')
+    router.push('/login')
   })
 
 const greet = (() => {
