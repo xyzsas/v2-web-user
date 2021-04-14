@@ -29,8 +29,7 @@
         </button>
       </p>
     </div>
-
-    <p v-if="loading" style="text-align: center">加载中...</p>
+    <loading v-if="loading"><p style="margin: 0;">正在载入消息...</p></loading>
     <p v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</p>
     <div class="columns is-tablet">
       <div class="column" v-for="c in columns">
@@ -47,7 +46,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-
+import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
 
 const router = useRouter()
@@ -67,19 +66,23 @@ const columns = computed(() => {
 })
 ref: loading = true
 
+async function getMsg () {
+  axios
+    .get('/msg/', { headers: { token: SS.token } })
+    .then(({ data }) => {
+      loading = false
+      msg = []
+      for (const k in data) msg.push(data[k].split('$$'))
+      msg.reverse()
+    })
+    .catch(async err => {
+      await Swal.fire('错误', err.response ? err.response.data : '网络错误', 'error')
+      router.push('/login')
+    })
+}
+
 if (!SS.token) router.push('/login')
-else axios // get messages
-  .get('/msg/', { headers: { token: SS.token } })
-  .then(({ data }) => {
-    loading = false
-    msg = []
-    for (const k in data) msg.push(data[k].split('$$'))
-    msg.reverse()
-  })
-  .catch(async err => {
-    await Swal.fire('错误', err.response ? err.response.data : '网络错误', 'error')
-    router.push('/login')
-  })
+else getMsg()
 
 const greet = (() => {
   const h = new Date().getHours()

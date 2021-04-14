@@ -2,7 +2,7 @@
   <div class="center">
     <div class="box" style="width: 360px;">
       <h1 class="title">个人中心</h1>
-      <p class="subtitle is-6 mt-3" v-if="loading">正在载入...</p>
+      <loading v-if="loading"><p style="margin: 0;">正在载入用户信息...</p></loading>
       <div v-else class="is-flex is-justify-content-space-between">
         <div class="p-3">
           <code class="is-inline-block">id: {{ SS.id }}</code>
@@ -18,7 +18,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-
+import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
 
 const router = useRouter()
