@@ -1,7 +1,7 @@
 <script>
 import { compile } from 'vue'
 
-import Test from './Test.vue'
+import Piece from './Piece.vue'
 
 let flag = true
 function onError (e) {
@@ -14,9 +14,9 @@ function onError (e) {
 }
 
 export default {
-  props: ['template', 'data', 'variables', 'ticket'],
+  props: ['template', 'data', 'vars', 'ticket'],
   components: {
-    Test
+    Piece
   },
   setup: (props) => {
     const h = compile(props.template, { onError })
