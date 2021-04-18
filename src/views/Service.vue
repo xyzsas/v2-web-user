@@ -3,8 +3,8 @@
     <div class="box form">
       <h1 class="title">{{ title }}</h1>
       <p class="subtitle is-6" style="margin-bottom: 0;">{{ subtitle }}</p>
-      <div v-if="affair" class="content">
-        <hr v-if="affair" class="mt-2">
+      <hr v-if="affair" class="mt-2">
+      <div v-if="affair" class="content p-2">
         <render v-if="affair" :template="affair.content" :data="affair.data" :vars="affair.vars"></render>
         <div class="buttons is-flex is-justify-content-center">
           <button class="button is-primary is-rounded mt-6 pr-6 pl-6" :class="{ 'is-loading': loading }" @click="submit">提交</button>
@@ -94,7 +94,10 @@ async function submit () {
     if (msg) await Swal.fire(msg.title, msg.subtitle || '', msg.icon)
     if (res.data.link) window.location.href = res.data.link
     else if (newAffair) {
-      for (const k in newAffair) affair[k] = newAffair[k]
+      for (const k in newAffair) {
+        affair[k] = newAffair[k]
+        if (k === 'data') oldData = JSON.stringify(newAffair[k])
+      }
     }
   } catch (e) {
     Swal.fire('错误', e.response ? e.response.data : '网络错误', 'error')
