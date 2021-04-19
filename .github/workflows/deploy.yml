@@ -6,6 +6,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  VITE_RUN_ID: ${{ env.GITHUB_RUN_ID }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +30,5 @@ jobs:
         access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
     - name: Delete Old assets
       run: ossutil rm -rf oss://xyzsas/assets/
-    - name: Delete Old index.html
-      run: ossutil rm -rf oss://xyzsas/index.html
     - name: Upload files to OSS
       run: ossutil cp -rf ./dist oss://xyzsas/
