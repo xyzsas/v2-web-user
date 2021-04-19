@@ -1,6 +1,7 @@
 <script>
 import { compile } from 'vue'
 
+const LS = window.localStorage
 import Piece from './Piece.vue'
 
 let flag = true
@@ -13,13 +14,19 @@ function onError (e) {
   console.error(e)
 }
 
+const render = html => html
+  .replace(/if="/g, 'v-if="').replace(/for="/g, 'v-for="')
+  .replace(/bind:/g, 'v-bind:').replace(/on:/g, 'v-on:')
+  .replace(/model="/g, 'v-model="')
+
 export default {
   props: ['template', 'data', 'vars', 'ticket'],
   components: {
     Piece
   },
   setup: (props) => {
-    const h = compile(props.template, { onError })
+    if (LS.developer) console.log(props.template)
+    const h = compile(render(props.template), { onError })
     return (_ctx, _cache) => h(props, _cache)
   }
 }
