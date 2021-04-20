@@ -4,7 +4,7 @@
     <h1 style="font-size: 4rem;">XYZSAS</h1>
     <p>Powered by yzITI</p>
     <div class="badges m-3">
-      <img src="https://img.shields.io/badge/version-2.0-brightgreen">
+      <img :src="`https://img.shields.io/badge/version-${version}-brightgreen`">
       <img :src="`https://img.shields.io/badge/user-${user}-blue`">
       <img :src="`https://img.shields.io/badge/admin-${admin}-red`">
     </div>
@@ -19,8 +19,9 @@
 
 <script setup>
 const LS = window.localStorage
-const user = LS['web-user-version'] || '0'
-const admin = LS['web-admin-version'] || '0'
+const version = window.localStorage['version'] = '2.0'
+const user = LS['web-user-version'] ? version + '.' + LS['web-user-version'] : 'Unavailable'
+const admin = LS['web-admin-version'] ? version + '.' + LS['web-admin-version'] : 'Unavailable'
 </script>
 
 <style scoped>
