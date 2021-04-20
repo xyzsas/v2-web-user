@@ -63,7 +63,6 @@ async function uploadImage () {
   const imgFile = document.getElementById('upload').files[0]
   const img = await faceapi.bufferToImage(imgFile)
   source.src = img.src
-  await new Promise(r => setTimeout(r, 2000))
   const d = await faceapi.detectSingleFace(img)
   console.log(d)
   if (!d) {
@@ -78,12 +77,11 @@ async function uploadImage () {
   const cy = b.y + b.height/2
   const c = {
     l: cx - 295*s/2,
-    t: cy - 413*s/2.33,
-    w: 295*s,
-    h: 413*s
+    t: cy - 413*s/2.33 < 0 ? cy - 413*s/2.40 : cy - 413*s/2.33,
+    w: 295*s, h: 413*s
   }
   if (c.l < 0 || c.t < 0 || c.l + c.w > d.imageWidth || c.t + c.h > d.imageHeight) {
-    Swal.fire('人脸太大', '无法截取标准尺寸<br>请重新选择图片', 'error')
+    Swal.fire('无法截取标准尺寸', '人脸过于靠近边界，请重新选择图片', 'error')
     msg = ''
     source.src = '/img/placeholder.png'
     return
@@ -91,7 +89,6 @@ async function uploadImage () {
   msg = '自动剪裁中...'
   ctx.drawImage(img, c.l, c.t, c.w, c.h, 0, 0, 295, 413)
   ok = true
-  await new Promise(r => setTimeout(r, 1000))
   msg = ''
 }
 
