@@ -20,11 +20,10 @@
 import { useRouter } from 'vue-router'
 import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
+import { SS, token } from '../plugins/state.js'
 
 const router = useRouter()
-const SS = window.sessionStorage
 if (!SS.token) router.push('/login')
-const opt = { headers: { token: SS.token } }
 
 ref: loading = true
 ref: img = ''
@@ -37,7 +36,7 @@ async function catchErr (e, jmp = true) {
 }
 
 async function fetch () {
-  const urls = await axios.get('/store/', opt)
+  const urls = await axios.get('/store/', token())
     .then(({ data }) => data)
     .catch(catchErr)
   img = urls.photo

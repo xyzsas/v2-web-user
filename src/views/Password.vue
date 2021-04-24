@@ -42,6 +42,7 @@
 import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { sha256 } from '../plugins/convention.js'
+import { SS } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -51,7 +52,6 @@ ref: oldpwd = ''
 ref: repeat = ''
 ref: loading = false
 
-const SS = window.sessionStorage
 if (route.query.id) {
   SS.id = route.query.id
   oldpwd = 'XYZSAS'

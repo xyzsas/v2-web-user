@@ -1,7 +1,7 @@
 <script>
 import { compile } from 'vue'
+import { A } from '../plugins/state.js'
 
-const LS = window.localStorage
 import Piece from './Piece.vue'
 
 let flag = true
@@ -20,14 +20,12 @@ const render = html => html
   .replace(/model="/g, 'v-model="')
 
 export default {
-  props: ['template', 'data', 'vars', 'ticket'],
   components: {
     Piece
   },
   setup: (props) => {
-    if (LS.developer) console.log(props.template)
-    const h = compile(render(props.template), { onError })
-    return (_ctx, _cache) => h(props, _cache)
+    const h = compile(render(A.value.content), { onError })
+    return (_ctx, _cache) => h(A.value, _cache)
   }
 }
 </script>

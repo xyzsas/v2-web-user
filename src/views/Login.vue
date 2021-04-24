@@ -72,6 +72,7 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 import axios from '../plugins/axios'
 import { md5, sha256 } from '../plugins/convention'
+import { SS } from '../plugins/state.js'
 
 ref: step = 'username'
 
@@ -128,7 +129,6 @@ const confirmPassword = async () => {
       random,
       password: sha256(sha256(password) + random)
     })
-    const SS = window.sessionStorage
     SS.token = data.token
     SS.name = data.user.name
     SS.id = data.user.id

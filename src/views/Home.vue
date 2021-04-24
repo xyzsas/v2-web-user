@@ -48,9 +48,9 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
+import { SS, token } from '../plugins/state.js'
 
 const router = useRouter()
-const SS = window.sessionStorage
 const location = window.location
 
 ref: msg = []
@@ -67,8 +67,7 @@ const columns = computed(() => {
 ref: loading = true
 
 async function getMsg () {
-  axios
-    .get('/msg/', { headers: { token: SS.token } })
+  axios.get('/msg/', token())
     .then(({ data }) => {
       loading = false
       msg = []

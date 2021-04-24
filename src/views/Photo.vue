@@ -33,11 +33,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 import * as faceapi from 'face-api.js'
 import axios from '../plugins/axios.js'
+import { SS, token } from '../plugins/state.js'
 
-const SS = window.sessionStorage
 if (!SS.token) router.push('/login')
-const opt = { headers: { token: SS.token } }
-
 const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
 const STD = 173.3 // pixel length of face area
 
@@ -109,7 +107,7 @@ async function submit () {
     return false
   }
   msg = '正在提交，请耐心等待...'
-  const url = await axios.post('/store/photo', {}, opt)
+  const url = await axios.post('/store/photo', {}, token())
     .then(({ data }) => data)
     .catch(catchErr)
   if (!url) return

@@ -4,8 +4,8 @@
 
 <script setup>
 import { defineProps } from 'vue'
-import { PS } from '../plugins/state.js'
+import { A } from '../plugins/state.js'
 const props = defineProps(['id'])
 const id = props.id
-ref: piece = PS.value[id]
+ref: piece = A.value.pieces[id]
 </script>

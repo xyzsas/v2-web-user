@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-const LS = window.localStorage
+import { LS } from '../plugins/state.js'
 const version = window.localStorage['version'] = '2.0'
 const user = LS['web-user-version'] ? version + '.' + LS['web-user-version'] : 'Unavailable'
 const admin = LS['web-admin-version'] ? version + '.' + LS['web-admin-version'] : 'Unavailable'
