@@ -123,28 +123,31 @@ const confirmUsername = async () => {
 const confirmPassword = async () => {
   loading = true
   try {
+    const url = route.query.c
     msg.text = '正在验证您的身份...'
     msg.err = false
-    const { data } = await axios.post('/auth/', {
+    const { data } = await axios.post('/auth/' + (url == 'AAUTH' ? 'code' : 'user'), {
       random,
       password: sha256(sha256(password) + random)
     })
+    msg.text = '登录成功，正在跳转...'
+    msg.err = false
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    if (url === 'AAUTH') {
+      window.location.href = 'https://aauth.link/reenter.html?code=' + data + '&state=' + (route.query.state || '')
+      return
+    }
     SS.token = data.token
     SS.name = data.user.name
     SS.id = data.user.id
     SS.group = data.user.group
     SS.role = data.user.role
 
-    msg.text = '登录成功，正在跳转...'
-    msg.err = false
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    let url = route.query.c
-    if (route.query.c === 'AAUTH') {
-      url = 'https://aauth.link/reenter.html?code=' + data.code + '&state=' + route.query.state
-    }
     if (url) window.location.href = url
     else router.push('/')
   } catch (err) {
+    console.log(err)
     msg.text = '网络错误'
     msg.err = true
     if (err.response) msg.text = err.response.data
