@@ -18,7 +18,7 @@
 import { computed, watch } from 'vue'
 import Render from '../pieces/Render.vue'
 import axios from '../plugins/axios.js'
-import { A, SS, token } from '../plugins/state.js'
+import { A, U, token } from '../plugins/state.js'
 import { clock, ms2Str } from '../plugins/clock.js'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter()
@@ -33,7 +33,7 @@ const title = computed(() => {
 const subtitle = computed(() => {
   if (start) return '倒计时结束将自动载入事务，无需反复刷新'
   if (!A.value) return '请耐心等待，无需反复刷新'
-  let res = A.value.anonymous ? '匿名事务' : '用户：' + SS.name
+  let res = A.value.anonymous ? '匿名事务' : '用户：' + (U.value ? U.value.name : '未登录')
   if (A.value.end) res += '， 剩余时间：' + ms2Str(A.value.end - clock.value)
   return res
 })
@@ -46,7 +46,7 @@ async function catchErr (e) {
   if (!e.response) return
   switch (e.response.status) {
     case 404: case 403: {
-      if (SS.token) router.push('/')
+      if (U.value) router.push('/')
       else router.push('/login?c=' + encodeURIComponent('/#/@/' + route.params.id))
       return
     }

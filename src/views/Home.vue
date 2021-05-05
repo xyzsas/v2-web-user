@@ -1,7 +1,7 @@
 <template>
-  <div class="container content" v-if="SS.token">
-    <h1>{{ greet }}，{{ SS.name }}！</h1>
-    <p>用户组：<code>{{ SS.group }}</code></p>
+  <div class="container content" v-if="U">
+    <h1>{{ greet }}，{{ U.name }}！</h1>
+    <p>用户组：<code>{{ U.group }}</code></p>
 
     <div class="field has-addons is-fullwidth">
       <p class="control">
@@ -20,7 +20,7 @@
           <span>修改密码</span>
         </button>
       </p>
-      <p class="control" v-show="SS.role === 'ADMIN'">
+      <p class="control" v-show="U.role === 'ADMIN'">
         <button class="button is-danger" @click="admin">
           <span class="icon">
             <i class="mdi mdi-monitor-dashboard"></i>
@@ -45,12 +45,12 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
-import { SS, token } from '../plugins/state.js'
+import { U, token, setUser } from '../plugins/state.js'
 
-const router = useRouter()
+const router = useRouter(), route = useRoute()
 const location = window.location
 
 ref: msg = []
@@ -80,7 +80,9 @@ async function getMsg () {
     })
 }
 
-if (!SS.token) router.push('/login')
+if (route.query.user && route.query.token) setUser({ user: JSON.parse(route.query.user), token: route.query.token })
+
+if (!U.value) router.push('/login')
 else getMsg()
 
 const greet = (() => {

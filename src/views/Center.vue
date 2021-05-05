@@ -5,10 +5,10 @@
       <loading v-if="loading"><p style="margin: 0;">正在载入用户信息...</p></loading>
       <div v-else class="is-flex is-justify-content-space-between">
         <div class="p-3">
-          <code class="is-inline-block">id: {{ SS.id }}</code>
-          <p class="mt-2">姓名：<b>{{ SS.name }}</b></p>
-          <p class="mt-2">角色：<b>{{ SS.role }}</b></p>
-          <p class="mt-2">用户组：<br v-if="SS.group.length > 8"><code>{{ SS.group }}</code></p>
+          <code class="is-inline-block">id: {{ U.id }}</code>
+          <p class="mt-2">姓名：<b>{{ U.name }}</b></p>
+          <p class="mt-2">角色：<b>{{ U.role }}</b></p>
+          <p class="mt-2">用户组：<br v-if="U.group.length > 8"><code>{{ U.group }}</code></p>
         </div>
         <img :src="img" onerror="this.src = '/img/placeholder.png'" alt="照片" width="130" height="182" @click="router.push('/photo')">
       </div>
@@ -20,10 +20,9 @@
 import { useRouter } from 'vue-router'
 import Loading from '../components/Loading.vue'
 import axios from '../plugins/axios'
-import { SS, token } from '../plugins/state.js'
+import { U, token } from '../plugins/state.js'
 
 const router = useRouter()
-if (!SS.token) router.push('/login')
 
 ref: loading = true
 ref: img = ''
@@ -42,7 +41,8 @@ async function fetch () {
   img = urls.photo
   loading = false
 }
-fetch()
+if (!U.value) router.push('/login')
+else fetch()
 </script>
 
 <style scoped>

@@ -42,7 +42,7 @@
 import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { sha256 } from '../plugins/convention.js'
-import { SS } from '../plugins/state.js'
+import { U, setUser, SS } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
@@ -53,9 +53,9 @@ ref: repeat = ''
 ref: loading = false
 
 if (route.query.id) {
-  SS.id = route.query.id
+  U.value = { id: route.query.id }
   oldpwd = 'XYZSAS'
-} else if (!SS.id) router.push('/')
+} else if (!U.value) router.push('/')
 
 const level = computed(() => {
   let level = 0
@@ -96,7 +96,7 @@ const catchErr = e => {
 async function submit () {
   if (!oldpwd || !newpwd || repeat != newpwd) return
   loading = true
-  const random = await axios.get('/auth/' + SS.id)
+  const random = await axios.get('/auth/' + U.value.id)
     .then(({ data }) => data)
     .catch(catchErr)
   if (!random) return
@@ -106,8 +106,7 @@ async function submit () {
     newPassword: sha256(newpwd)
   })
     .then(async () => {
-      delete SS.id
-      delete SS.token
+      setUser({ user: null, token: '' })
       await Swal.fire('修改密码成功', '请重新登录', 'success')
       router.push('/')
     })

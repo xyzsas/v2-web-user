@@ -33,9 +33,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 import * as faceapi from 'face-api.js'
 import axios from '../plugins/axios.js'
-import { SS, token } from '../plugins/state.js'
+import { U, token } from '../plugins/state.js'
 
-if (!SS.token) router.push('/login')
+if (!U.value) router.push('/login')
 const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
 const STD = 173.3 // pixel length of face area
 

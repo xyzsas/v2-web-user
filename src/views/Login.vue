@@ -72,7 +72,7 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 import axios from '../plugins/axios'
 import { md5, sha256 } from '../plugins/convention'
-import { SS } from '../plugins/state.js'
+import { U, SS, setUser } from '../plugins/state.js'
 
 ref: step = 'username'
 
@@ -138,12 +138,9 @@ const confirmPassword = async () => {
       window.location.href = 'https://aauth.link/reenter.html?code=' + data + '&state=' + (route.query.state || '')
       return
     }
+    setUser(data)
+    SS.user = JSON.stringify(data.user)
     SS.token = data.token
-    SS.name = data.user.name
-    SS.id = data.user.id
-    SS.group = data.user.group
-    SS.role = data.user.role
-
     if (url) window.location.href = url
     else router.push('/')
   } catch (err) {
