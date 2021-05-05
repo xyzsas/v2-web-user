@@ -20,8 +20,8 @@
 <script setup>
 import { LS } from '../plugins/state.js'
 const version = LS['version'] = '2.1'
-const user = LS['web-user-version'] ? version + '.' + LS['web-user-version'] : 'Unavailable'
-const admin = LS['web-admin-version'] ? version + '.' + LS['web-admin-version'] : 'Unavailable'
+const user = LS['web-user-version'] || 'Unavailable'
+const admin = LS['web-admin-version'] || 'Unavailable'
 </script>
 
 <style scoped>

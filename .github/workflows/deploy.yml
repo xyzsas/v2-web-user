@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  VITE_VERSION: ${{ github.run_number }}
+  VITE_VERSION: ${{ github.sha }}
 
 jobs:
   build:
