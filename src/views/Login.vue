@@ -135,7 +135,7 @@ const confirmPassword = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     if (url === 'AAUTH') {
-      window.location.href = 'https://aauth.link/reenter.html?code=' + data + '&state=' + (route.query.state || '')
+      window.location.href = 'https://cn.aauth.link/reenter.html?code=' + data + '&state=' + (route.query.state || '')
       return
     }
     setUser(data)
