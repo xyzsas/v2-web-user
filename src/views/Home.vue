@@ -41,7 +41,7 @@
       </div>
     </div>
   </div>
-  <img src="/img/fox.png" style="position: absolute; right: 0; bottom: -50px;">
+  <img src="/img/fox.png" style="position: absolute; right: 0; bottom: 0;">
 </template>
 
 <script setup>
