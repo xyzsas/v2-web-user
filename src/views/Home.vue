@@ -40,8 +40,8 @@
         </div>
       </div>
     </div>
+    <img src="/img/fox.png" style="position: absolute; right: 0; bottom: 0; object-position: 50% 10px;">
   </div>
-  <img src="/img/fox.png" style="position: absolute; right: 0; bottom: -50px;">
 </template>
 
 <script setup>
