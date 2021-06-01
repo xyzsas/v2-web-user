@@ -2,8 +2,6 @@
 import { compile } from 'vue'
 import { A } from '../plugins/state.js'
 
-import Piece from './Piece.vue'
-
 let flag = true
 function onError (e) {
   if (flag) {
@@ -20,9 +18,6 @@ const render = html => html
   .replace(/model="/g, 'v-model="')
 
 export default {
-  components: {
-    Piece
-  },
   setup: (props) => {
     const h = compile(render(A.value.content), { onError })
     return (_ctx, _cache) => h(A.value, _cache)

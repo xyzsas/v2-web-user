@@ -2,7 +2,7 @@
   <div class="about">
     <img src="/img/logo.svg" style="width: 200px; max-width: 50%;">
     <h1 style="font-size: 4rem;">XYZSAS</h1>
-    <p>Powered by yzITI</p>
+    <p style="cursor: pointer;" @click="ITI">Powered by yzITI</p>
     <div class="badges m-3">
       <img :src="`https://img.shields.io/badge/version-${version}-brightgreen`">
       <img :src="`https://img.shields.io/badge/user-${user}-blue`">
@@ -22,6 +22,10 @@ import { LS } from '../plugins/state.js'
 const version = LS['version'] = '2.1'
 const user = LS['web-user-version'] || 'Unavailable'
 const admin = LS['web-admin-version'] || 'Unavailable'
+
+function ITI () {
+  window.location.href = 'https://dev.yzzx.org/ITI/'
+}
 </script>
 
 <style scoped>

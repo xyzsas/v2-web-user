@@ -16,7 +16,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import Render from '../pieces/Render.vue'
+import Render from '../components/Render.vue'
 import axios from '../plugins/axios.js'
 import { A, U, token } from '../plugins/state.js'
 import { clock, ms2Str } from '../plugins/clock.js'
