@@ -81,7 +81,7 @@ async function submit () {
   try {
     const target = A.value.target || '/service/'
     const res = await axios.post(target, body, { headers: { ticket: A.value.ticket } })
-    const msg = res.data.msg, newAffair = res.data.affair
+    const msg = res.data.msg, newAffair = res.data.new
     if (msg) await Swal.fire(msg.title, msg.subtitle || '', msg.icon)
     if (res.data.link) window.location.href = res.data.link
     else if (newAffair) {
@@ -91,7 +91,7 @@ async function submit () {
       }
     }
   } catch (e) {
-    Swal.fire('错误', e.response ? e.response.data : '网络错误', 'error')
+    Swal.fire('错误', e.response ? String(e.response.data) : '网络错误', 'error')
     fetch()
   }
   loading = false
