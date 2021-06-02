@@ -5,7 +5,7 @@
       <p class="subtitle is-6" style="margin-bottom: 0;">{{ subtitle }}</p>
       <hr v-if="A" class="mt-2">
       <div v-if="A" class="content p-2">
-        <render v-if="A"></render>
+        <render v-if="A" :key="md5(A.content)"></render>
         <div class="buttons is-flex is-justify-content-center">
           <button class="button is-primary is-rounded mt-6 pr-6 pl-6" :class="{ 'is-loading': loading }" @click="submit">提交</button>
         </div>
@@ -20,6 +20,7 @@ import Render from '../components/Render.vue'
 import axios from '../plugins/axios.js'
 import { A, U, token } from '../plugins/state.js'
 import { clock, ms2Str } from '../plugins/clock.js'
+import { md5 } from '../plugins/convention.js'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter()
 
