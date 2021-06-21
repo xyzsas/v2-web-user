@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <img src="/img/logo.svg" style="width: 200px; max-width: 50%;">
+    <img src="/img/logo.svg" style="width: 200px; max-width: 50%;" @click="icon">
     <h1 style="font-size: 4rem;">XYZSAS</h1>
     <p style="cursor: pointer;" @click="ITI">Powered by yzITI</p>
     <div class="badges m-3">
@@ -19,12 +19,22 @@
 
 <script setup>
 import { LS } from '../plugins/state.js'
-const version = LS['version'] = '2.1'
+const version = LS['version'] = '2.2'
 const user = LS['web-user-version'] || 'Unavailable'
 const admin = LS['web-admin-version'] || 'Unavailable'
 
 function ITI () {
   window.location.href = 'https://dev.yzzx.org/ITI/'
+}
+
+let x = 0
+function icon () {
+  x++
+  setTimeout(() => { x-- }, 1000)
+  if (x == 5) {
+    window.localStorage.developer = 1
+    Swal.fire('启用开发者模式', 'window.localStorage.developer', 'success')
+  }
 }
 </script>
 
