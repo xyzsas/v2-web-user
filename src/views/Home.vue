@@ -72,7 +72,7 @@ async function getMsg () {
       loading = false
       msg = []
       for (const k in data) msg.push(data[k].split('$$'))
-      msg.reverse()
+      msg.sort((a, b) => a[0].localeCompare(b[0]))
     })
     .catch(async err => {
       await Swal.fire('错误', err.response ? err.response.data : '网络错误', 'error')
