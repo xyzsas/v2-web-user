@@ -6,13 +6,15 @@ on:
   push:
     branches: [ main ]
 
-env:
-  VITE_VERSION: ${{ github.sha }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: time
+      with:
+        format: "YYYY-MM-DD HH:mm:ss"
     - uses: actions/checkout@v2
     - name: Setup Node.js environment
       uses: actions/setup-node@v2
@@ -21,6 +23,8 @@ jobs:
     - name: npm install
       run: npm install
     - name: npm build
+      env:
+        VITE_VERSION: ${{ steps.time.outputs.formattedTime }}
       run: npm run build
     - name: Setup Aliyun OSS
       uses: manyuanrong/setup-ossutil@master
