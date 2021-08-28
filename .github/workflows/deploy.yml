@@ -14,7 +14,7 @@ jobs:
       uses: 1466587594/get-current-time@v2
       id: time
       with:
-        format: "YYYY-MM-DD HH:mm:ss"
+        format: "UTC YYYY-MM-DD HH:mm:ss"
     - uses: actions/checkout@v2
     - name: Setup Node.js environment
       uses: actions/setup-node@v2

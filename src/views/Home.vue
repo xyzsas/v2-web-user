@@ -31,7 +31,7 @@
     </div>
     <loading v-if="loading"><p style="margin: 0;">正在载入消息...</p></loading>
     <p v-if="!loading && msg.length === 0" style="text-align: center">暂时没有消息</p>
-    <div class="columns is-tablet">
+    <div class="columns is-tablet mb-6">
       <div class="column" v-for="c in columns">
         <div v-for="i in c" class="box">
           <h4 v-if="i[0]">{{ i[0] }}</h4>
@@ -40,13 +40,16 @@
         </div>
       </div>
     </div>
+    <div class="sentence">
+      <sentence></sentence>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Loading from '../components/Loading.vue'
+import Sentence from '../components/Sentence.vue'
 import axios from '../plugins/axios'
 import { U, token, setUser } from '../plugins/state.js'
 
@@ -54,7 +57,7 @@ const router = useRouter(), route = useRoute()
 const location = window.location
 
 let msg = $ref([])
-const columns = computed(() => {
+let columns = $computed(() => {
   const res = [[], [], []]
   let cot = 0
   for (const m of msg) {
@@ -103,5 +106,11 @@ div.container {
   width: 100%;
   height: 100vh;
   padding: 24px;
+  position: relative;
+}
+div.sentence {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
 }
 </style>

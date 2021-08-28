@@ -4,8 +4,8 @@
     <h1 style="font-size: 4rem;">XYZSAS</h1>
     <p style="cursor: pointer;" @click="ITI">Powered by yzITI</p>
     <div class="badges m-3">
-      <img :src="`https://img.shields.io/badge/user-UTC ${user}-blue`">
-      <img :src="`https://img.shields.io/badge/admin-UTC ${admin}-red`">
+      <img :src="`https://img.shields.io/badge/user-${user}-blue`">
+      <img :src="`https://img.shields.io/badge/admin-${admin}-red`">
     </div>
     <div style="height: 10vh;"></div>
     <div class="footer">
