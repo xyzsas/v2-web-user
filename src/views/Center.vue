@@ -24,8 +24,8 @@ import { U, token } from '../plugins/state.js'
 
 const router = useRouter()
 
-ref: loading = true
-ref: img = ''
+let loading = $ref(true)
+let img = $ref('')
 
 async function catchErr (e, jmp = true) {
   console.log(e)

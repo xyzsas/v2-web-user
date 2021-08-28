@@ -74,7 +74,7 @@ import axios from '../plugins/axios'
 import { md5, sha256 } from '../plugins/convention'
 import { U, SS, setUser } from '../plugins/state.js'
 
-ref: step = 'username'
+let step = $ref('username')
 
 const msg = reactive({
   text: '',
@@ -86,16 +86,16 @@ const clearMsg = () => {
   msg.err = false
 }
 
-ref: loading = false
+let loading = $ref(false)
 
-ref: username = ''
-ref: password = ''
-ref: random = ''
+let username = $ref('')
+let password = $ref('')
+let random = $ref('')
 
-watch($username, clearMsg)
-watch($password, clearMsg)
+watch($$(username), clearMsg)
+watch($$(password), clearMsg)
 
-ref: input = null
+let input = $ref(null)
 
 const confirmUsername = async () => {
   username = username.toUpperCase()

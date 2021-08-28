@@ -39,9 +39,9 @@ if (!U.value) router.push('/login')
 const modelURL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights/'
 const STD = 173.3 // pixel length of face area
 
-ref: msg = '正在载入人脸检测模块...'
-ref: ready = false
-ref: ok = false
+let msg = $ref('正在载入人脸检测模块...')
+let ready = $ref(false)
+let ok = $ref(false)
 
 let source, canvas, ctx
 

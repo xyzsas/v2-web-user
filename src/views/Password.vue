@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { sha256 } from '../plugins/convention.js'
 import { U, setUser, SS } from '../plugins/state.js'
@@ -47,31 +46,31 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 
-ref: newpwd = ''
-ref: oldpwd = ''
-ref: repeat = ''
-ref: loading = false
+let newpwd = $ref('')
+let oldpwd = $ref('')
+let repeat = $ref('')
+let loading = $ref(false)
 
 if (route.query.id) {
   U.value = { id: route.query.id }
   oldpwd = 'XYZSAS'
 } else if (!U.value) router.push('/')
 
-const level = computed(() => {
-  let level = 0
+let level = $computed(() => {
+  let l = 0
   if (newpwd.length < 8) return 0
-  if (newpwd.match(/[A-Z]/)) level++
-  if (newpwd.match(/[a-z]/)) level++
-  if (newpwd.match(/[0-9]/)) level++
-  if (newpwd.match(/[!@#$%^&*+-/=?]/)) level++
-  if (newpwd.length > 12) level++
-  if (level < 2) return 1
-  if (level > 3) return 3
+  if (newpwd.match(/[A-Z]/)) l++
+  if (newpwd.match(/[a-z]/)) l++
+  if (newpwd.match(/[0-9]/)) l++
+  if (newpwd.match(/[!@#$%^&*+-/=?]/)) l++
+  if (newpwd.length > 12) l++
+  if (l < 2) return 1
+  if (l > 3) return 3
   return 2
 })
 
-const text = computed(() => {
-  switch (level.value) {
+let text = $computed(() => {
+  switch (level) {
     case 0: return '密码长度至少为8'
     case 1: return '密码强度：弱'
     case 2: return '密码强度：中'
@@ -79,8 +78,8 @@ const text = computed(() => {
   }
 })
 
-const textcolor = computed(() => {
-  switch (level.value) {
+let textcolor = $computed(() => {
+  switch (level) {
     case 0: return '#f5222d'
     case 1: return '#f5222d' 
     case 2: return '#F4D03F'

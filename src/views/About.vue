@@ -4,9 +4,8 @@
     <h1 style="font-size: 4rem;">XYZSAS</h1>
     <p style="cursor: pointer;" @click="ITI">Powered by yzITI</p>
     <div class="badges m-3">
-      <img :src="`https://img.shields.io/badge/version-${version}-brightgreen`">
-      <img :src="`https://img.shields.io/badge/user-${user}-blue`">
-      <img :src="`https://img.shields.io/badge/admin-${admin}-red`">
+      <img :src="`https://img.shields.io/badge/user-UTC ${user}-blue`">
+      <img :src="`https://img.shields.io/badge/admin-UTC ${admin}-red`">
     </div>
     <div style="height: 10vh;"></div>
     <div class="footer">
@@ -19,9 +18,8 @@
 
 <script setup>
 import { LS } from '../plugins/state.js'
-const version = LS['version'] = '2.2'
-const user = LS['web-user-version'] || 'Unavailable'
-const admin = LS['web-admin-version'] || 'Unavailable'
+const user = (LS['web-user-version'] || 'Unavailable').replace(/-/g, '--')
+const admin = (LS['web-admin-version'] || 'Unavailable').replace(/-/g, '--')
 
 function ITI () {
   window.location.href = 'https://dev.yzzx.org/ITI/'

@@ -53,7 +53,7 @@ import { U, token, setUser } from '../plugins/state.js'
 const router = useRouter(), route = useRoute()
 const location = window.location
 
-ref: msg = []
+let msg = $ref([])
 const columns = computed(() => {
   const res = [[], [], []]
   let cot = 0
@@ -64,7 +64,7 @@ const columns = computed(() => {
   }
   return res
 })
-ref: loading = true
+let loading = $ref(true)
 
 async function getMsg () {
   axios.get('/msg/', token())

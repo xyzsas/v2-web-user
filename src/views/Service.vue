@@ -24,7 +24,7 @@ import { md5 } from '../plugins/convention.js'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute(), router = useRouter()
 
-ref: start = 0
+let start = $ref(0)
 let oldData
 A.value = null
 const title = computed(() => {
@@ -72,7 +72,7 @@ async function fetch () {
 }
 fetch()
 
-ref: loading = false
+let loading = $ref(false)
 async function submit () {
   loading = true
   const body = { signature: A.value.signature, data: JSON.parse(oldData) }
