@@ -107,10 +107,11 @@ async function submit () {
     return false
   }
   msg = '正在提交，请耐心等待...'
-  const url = await axios.post('/store/photo', {}, token())
+  let url = await axios.post('/store/photo', {}, token())
     .then(({ data }) => data)
     .catch(catchErr)
   if (!url) return
+  url = url.replace('http://', 'https://')
   try {
     await axios.put(url, toBlob(data), { headers: { 'Content-Type': 'image/png' } })
     Swal.fire('成功', '照片上传成功', 'success')
