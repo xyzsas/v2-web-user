@@ -38,20 +38,8 @@ let loading = $ref(false)
 let clock = $ref('')
 
 async function getAll() {
-  const findModel = `{
-    "v": "alpha",
-    ":": [{
-      "#": "enroll",
-      "_": "?"
-    }, {
-      "#": "data",
-      "_": "?",
-      ":": {
-        "${U.value.id}": 1
-      }
-    }]
-  }`
-  await axios.post(url, JSON.parse(findModel), token())
+  const findModel = { v: 'alpha', ':': [{ '#': 'enroll', '_': '?' }, { '#': 'data', '_': '?', ':': { [U.value.id]: 1 } }] }
+  await axios.post(url, findModel, token())
     .then(({data}) => {
       if (!data[0].ok) Swal.fire('错误', '非法请求', 'error')
       all = data[0].result.courses.split(',')
@@ -70,25 +58,12 @@ async function getAll() {
 async function submit (c) {
   if (selected) return
   loading = true
-  const submitModel = `{
-    "v": "alpha",
-    ":": [{
-      "#": "enroll",
-      ":": {
-        "$${all.indexOf(c)}": { "_": "DEC" }
-      }
-    }, {
-      "#": "data",
-      ":": {
-        "${U.value.id}": "${c.name}"
-      }
-    }]
-  }`
-  await axios.post(url, JSON.parse(submitModel), token())
+  const submitModel = { v: 'alpha', ':': [{ '#': 'data', '_': '?', '!': 0, ':': { [U.value.id]: 1 } }, { '#': 'enroll', ':': { ['$' + all.indexOf(c)]: { '_': 'DEC' } } }, { '#': 'data', ':': { [U.value.id]: c.name } }] }
+  await axios.post(url, submitModel, token())
     .then(({data}) => {
       if (data[0].ok && data[1].ok) {
         Swal.fire('成功', '选课成功', 'success')
-          .then(() => { router.push('https://sas.yzzx.org/#/@/uNhh57K78w') })
+          .then(() => { router.push('/@/uNhh57K78w') })
           .catch(catchErr)
       }
     })
