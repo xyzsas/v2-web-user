@@ -1,14 +1,17 @@
 <template>
   <div class="container">
     <div class="title is-3">拓展性课程选课</div>
-    <div class="note mb-3">本页面为XYZSAS v3实验页面, <strong>请勿反复刷新!</strong></div>
-    <div class="title is-5">倒计时<code>{{ clock }}</code></div>
-    <table class="table" v-if="!pageLoading">
+    <div class="note mb-3">本次选课为XYZSAS v3技术实验，请按照指示操作。<strong>请勿反复刷新!</strong></div>
+    <div v-if="clock" class="mt-6">
+      <h1 class="title is-3" style="text-align: center;">选课尚未开始<br><code class="m-2">{{ clock }}</code></h1>
+      <p style="text-align: center;">倒计时结束后系统会自动载入数据</p>
+    </div>
+    <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock">
       <thead>
         <tr>
           <th>课程名称</th>
-          <th>剩余量</th>
-          <th>选择</th>
+          <th style="min-width: 4rem;">剩余</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tfoot>
@@ -20,7 +23,7 @@
         </tr>
       </tfoot>
     </table>
-    <p v-else>正在加载选课信息, 请耐心等待...</p>
+    <p v-if="pageLoading">正在加载选课信息, 请耐心等待...</p>
   </div>
 </template>
 
@@ -28,7 +31,7 @@
 import { U, token } from '../plugins/state.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const start = new Date("2021-10-19T12:00:00.000+08:00").getTime()
+const start = Date.now() + 1e4// new Date("2021-10-19T12:00:00.000+08:00").getTime()
 
 async function catchErr (e, jmp = true) {
   console.log(e)
@@ -42,7 +45,7 @@ let all = $ref([])
 let selected = $ref(null)
 let loading = $ref(false)
 let pageLoading = $ref(false)
-let clock = $ref('')
+let clock = $ref('Loading')
 
 async function getAll() {
   pageLoading = true
@@ -69,7 +72,8 @@ async function submit (c) {
   let cancel = false
   const submitModel = { v: 'alpha', ':': [{ '#': 'data', '_': '?', '!': 0, ':': { [U.value.id]: 1 } }, { '#': 'enroll', ':': { ['$' + all.indexOf(c)]: { '_': 'DEC' } } }, { '#': 'data', ':': { [U.value.id]: c.name } }] }
   await Swal.fire({
-    title: `您即将选择的课程为${c.name}!`,
+    title: '确认选课吗？',
+    text: '您正在选择' + c.name,
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: '确认',
@@ -96,7 +100,8 @@ async function submit (c) {
         return
       }
       Swal.fire({
-        title: '选课成功! 是否填写学生事务系统体验问卷？',
+        title: '选课成功! ',
+        text: '诚邀您填写学生事务系统体验问卷',
         icon: 'success',
         showCancelButton: true,
         confirmButtonText: '填写问卷',
@@ -117,19 +122,19 @@ function step () {
   const diff = start - curr
   expected += 1000
   if (diff < 0) {
-    clock = '结束'
+    clock = ''
+    getAll()
     return
   }
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-  clock = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
+  const hours = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0')
+  const minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0')
+  const seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0')
+  clock = `${days}d ${hours}:${minutes}:${seconds}`
   setTimeout(step, Math.max(0, 1000 - curr + expected))
 }
 console.log('都说了技术实验版，就不要乱皮了吧！很想皮的话加QQ1323933782，加入ITI吧！')
 step()
-getAll()
 
 </script>
 
@@ -146,8 +151,5 @@ getAll()
 }
 .note {
   color: grey;
-}
-th {
-  width: 50vw;
 }
 </style>
