@@ -1,22 +1,25 @@
 <template>
   <div class="container">
-    <div class="title is-3">{{ greet }}, {{ U.name }}!</div>
+    <div class="title is-3">拓展性课程选课</div>
     <div class="note mb-3">本页面为XYZSAS v3实验页面</div>
-    <div class="title is-5">高四年级第二百零三次选课即将开始 倒计时<code>{{ clock }}</code></div>
-    <table class="table">
+    <div class="title is-5">倒计时<code>{{ clock }}</code></div>
+    <table class="table" v-if="!pageLoading">
       <thead>
         <tr>
           <th>课程名称</th>
           <th>剩余量</th>
+          <th>选择</th>
         </tr>
       </thead>
       <tfoot>
         <tr v-for="c in all" style="cursor: pointer" @click="submit(c)">
           <th>{{ c.name }}</th>
           <th>{{ c.left }}</th>
+          <th><button class="button is-small is-info" :disabled="selected">选课</button></th>
         </tr>
       </tfoot>
     </table>
+    <p v-else>正在加载选课信息...</p>
   </div>
 </template>
 
@@ -24,6 +27,7 @@
 import { U, token } from '../plugins/state.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+const start = new Date("2021-10-20T12:00:00.000+08:00").getTime()
 
 async function catchErr (e, jmp = true) {
   console.log(e)
@@ -31,17 +35,21 @@ async function catchErr (e, jmp = true) {
   if (jmp) router.push('/')
   return false
 }
+
 const url = 'https://sas.aauth.link/xyz'
 let all = $ref([])
 let selected = $ref(null)
 let loading = $ref(false)
+let pageLoading = $ref(false)
 let clock = $ref('')
 
 async function getAll() {
+  pageLoading = true
   const findModel = { v: 'alpha', ':': [{ '#': 'enroll', '_': '?' }, { '#': 'data', '_': '?', ':': { [U.value.id]: 1 } }] }
   await axios.post(url, findModel, token())
     .then(({data}) => {
       if (!data[0].ok) Swal.fire('错误', '非法请求', 'error')
+      console.log(data)
       all = data[0].result.courses.split(',')
       for (let i = 0; i < all.length; i++) {
         all[i] = { name: all[i], left: data[0].result[`$${i}`] }
@@ -49,10 +57,11 @@ async function getAll() {
       if (!data[1].ok) Swal.fire('错误', '非法请求', 'error')
       if (data[1].result) {
         Swal.fire('注意', '您已选课, 请勿重复操作!', 'warning')
-        selected = data[1].result
+        selected = data[1]
       }
     })
     .catch(catchErr)
+  pageLoading = false
 }
 
 async function submit (c) {
@@ -71,19 +80,25 @@ async function submit (c) {
   loading = false
 }
 
-const greet = (() => {
-  const h = new Date().getHours()
-  if (h < 11) return '早上好'
-  if (h >= 11 && h < 13) return '中午好'
-  if (h >= 13 && h < 18) return '下午好'
-  if (h >= 18) return '晚上好'
-})()
-
-async function getClock () {
-
+let expected = Date.now() + 1000
+function step () {
+  const curr = Date.now()
+  
+  const diff = start - curr
+  expected += 1000
+  if (diff < 0) {
+    clock = '结束'
+    return
+  }
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+  clock = days + "d " + hours + "h " + minutes + "m " + seconds + "s "
+  setTimeout(step, Math.max(0, 1000 - curr + expected))
 }
 
-getClock()
+step()
 getAll()
 
 </script>
