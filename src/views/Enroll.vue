@@ -33,7 +33,7 @@ const start = new Date("2021-10-19T12:00:00.000+08:00").getTime()
 async function catchErr (e, jmp = true) {
   console.log(e)
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
-  if (jmp) router.push('/')
+  if (jmp) router.push('/experiment')
   return false
 }
 
