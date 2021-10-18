@@ -6,7 +6,7 @@
       <h1 class="title is-3" style="text-align: center;">选课尚未开始<br><code class="m-2">{{ clock }}</code></h1>
       <p style="text-align: center;">倒计时结束后系统会自动载入数据</p>
     </div>
-    <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock">
+    <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock && all.length">
       <thead>
         <tr>
           <th>课程名称</th>
@@ -31,7 +31,9 @@
 import { U, token } from '../plugins/state.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const start = Date.now() + 1e4// new Date("2021-10-19T12:00:00.000+08:00").getTime()
+const start = new Date("2021-10-20T12:00:00.000+08:00").getTime()
+
+if (!U.value) router.push('/')
 
 async function catchErr (e, jmp = true) {
   console.log(e)
@@ -49,15 +51,16 @@ let clock = $ref('Loading')
 
 async function getAll() {
   pageLoading = true
+  all = []
   const findModel = { v: 'alpha', ':': [{ '#': 'enroll', '_': '?' }, { '#': 'data', '_': '?', ':': { [U.value.id]: 1 } }] }
   await axios.post(url, findModel, token())
     .then(({data}) => {
-      if (!data[0].ok) Swal.fire('错误', '非法请求', 'error')
+      if (!data[0].ok) Swal.fire('错误', '请重新进入', 'error')
       all = data[0].result.courses.split(',')
       for (let i = 0; i < all.length; i++) {
         all[i] = { name: all[i], left: data[0].result[`$${i}`] }
       }
-      if (!data[1].ok) Swal.fire('错误', '非法请求', 'error')
+      if (!data[1].ok) Swal.fire('错误', '请重新进入', 'error')
       if (data[1].result) {
         selected = data[1].result[U.value.id]
       }
@@ -93,6 +96,7 @@ async function submit (c) {
       }
       if (!data[1].ok) {
         Swal.fire('失败', '选课失败, 请查看剩余量是否充足', 'error')
+        getAll()
         return
       }
       if (!data[2].ok) {
@@ -107,7 +111,10 @@ async function submit (c) {
         confirmButtonText: '填写问卷',
         cancelButtonText: '离开'
       })
-        .then((res) => { if (res.isConfirmed) router.push('/@/uNhh57K78w') })
+        .then((res) => {
+          if (res.isConfirmed) router.push('/@/uNhh57K78w')
+          else router.push('/')
+        })
         .catch(catchErr)
     })
     .catch(catchErr)
@@ -115,10 +122,9 @@ async function submit (c) {
   loading = false
 }
 
-let expected = Date.now() + 1000
+let expected = Date.now()
 function step () {
   const curr = Date.now()
-  
   const diff = start - curr
   expected += 1000
   if (diff < 0) {
