@@ -106,7 +106,7 @@ async function submit (i) {
         return
       }
       Swal.fire({
-        title: '选课成功! ',
+        title: '加入社团成功! ',
         text: '诚邀您填写学生事务系统体验问卷',
         icon: 'success',
         showCancelButton: true,
