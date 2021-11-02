@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="title is-3">社团招新</div>
+    <div class="note mb-3">本次社团招新为XYZSAS v3技术实验，请按照指示操作。<strong>请勿反复刷新！</strong></div>
     <div class="note mb-3"><strong>v3系统将不能集体重置密码，此后忘记学生事务系统密码须自行承担延误抢课与查分等功能的风险！</strong></div>
     <div v-if="clock" class="mt-6">
       <h1 class="title is-3" style="text-align: center;">社团招新尚未开始<br><code class="m-2">{{ clock }}</code></h1>
