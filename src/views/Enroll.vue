@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <div class="title is-3">拓展性课程选课</div>
-    <div class="note mb-3">本次选课为XYZSAS v3技术实验，请按照指示操作。<strong>请勿反复刷新!</strong></div>
+    <div class="title is-3">社团招新</div>
+    <div class="note mb-3">本次社团招新为XYZSAS v3技术实验，请按照指示操作。<strong>请勿反复刷新!</strong></div>
     <div v-if="clock" class="mt-6">
-      <h1 class="title is-3" style="text-align: center;">选课尚未开始<br><code class="m-2">{{ clock }}</code></h1>
+      <h1 class="title is-3" style="text-align: center;">社团招新尚未开始<br><code class="m-2">{{ clock }}</code></h1>
       <p style="text-align: center;">倒计时结束后系统会自动载入数据</p>
     </div>
     <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock && all.length">
       <thead>
         <tr>
-          <th>课程名称</th>
+          <th>社团名称</th>
           <th style="min-width: 4rem;">剩余</th>
           <th>操作</th>
         </tr>
@@ -18,12 +18,12 @@
         <tr v-for="c in all">
           <th>{{ c.name }}</th>
           <th>{{ c.left }}</th>
-          <th v-if="c.name != selected"><button class="button is-small is-info" :disabled="selected || c.left <= 0" :class="{ 'is-loading': loading, 'is-danger': c.left <= 0 }" @click="submit(c)">{{ c.left > 0 ? '选课' : '已满' }}</button></th>
-          <th v-else><button class="button is-small is-primary" disabled :class="{ 'is-loading': loading }">已选</button></th>
+          <th v-if="all.indexOf(c) != selected"><button class="button is-small is-info" :disabled="selected || c.left <= 0" :class="{ 'is-loading': loading, 'is-danger': c.left <= 0 }" @click="submit(all.indexOf(c))">{{ c.left > 0 ? '加入' : '已满' }}</button></th>
+          <th v-else><button class="button is-small is-primary" disabled :class="{ 'is-loading': loading }">已加入</button></th>
         </tr>
       </tfoot>
     </table>
-    <p v-if="pageLoading">正在加载选课信息, 请耐心等待...</p>
+    <p v-if="pageLoading">正在加载社团信息, 请耐心等待...</p>
   </div>
 </template>
 
@@ -31,7 +31,7 @@
 import { U, token } from '../plugins/state.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const start = new Date("2021-10-20T12:00:00.000+08:00").getTime()
+const start = new Date("2021-11-04T12:20:00.000+08:00").getTime()
 
 if (!U.value) router.push('/')
 
@@ -52,13 +52,13 @@ let clock = $ref('Loading')
 async function getAll() {
   pageLoading = true
   all = []
-  const findModel = { v: 'alpha', ':': [{ '#': 'enroll', '_': '?' }, { '#': 'data', '_': '?', ':': { [U.value.id]: 1 } }] }
+  const findModel = { v: 'eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyI6IjoiW3tcIiNcIjpcImNsdWJcIixcIl9cIjpcIj9cIn0se1wiI1wiOlwiY2x1YmRhdGFcIixcIl9cIjpcIj9cIixcIjpcIjp7XCIke2lkfVwiOjF9fV0iLCI_IjpbImlkIl0sIm5iZiI6MTYzNTk5OTYwMDAwMH0.VsKedpKnSKRbfGIslUj4SHZYEjK253R7LxSR1cCcUJxcLJIVuRaihTCjYghy8VNRFn6jSIkTfUi3RJa6H6xHhEd_F_V7-staEWHAmFEkUWcOl9xa8w4gUl9JSgz8mrN6e3-FoVsHj8khqet5dNsPJt3gG6ZQ38hg1MiBUbEuDaOGzVrYwDXObl55eTEH9yDglV5Xycy2XIRGKK_8_kaJRj-HMX0XD83HPk6rjnnjsNGEbpd5nJadNf9X0LuYRlGojIwEngZJnrYm2vC08v2tnnJbFY3qP1GoDxgBVO3QrSSH--PKTvG2blCv9WLEIMpcjTBKMG23vymJy4mrE5sddA', s: { id: U.value.id } }
   await axios.post(url, findModel, token())
     .then(({data}) => {
       if (!data[0].ok) Swal.fire('错误', '请重新进入', 'error')
-      all = data[0].result.courses.split(',')
-      for (let i = 0; i < all.length; i++) {
-        all[i] = { name: all[i], left: data[0].result[`$${i}`] }
+      const cs = data[0].result.options.split(',')
+      for (const c of cs) {
+        all.push({ name: c.substring(c.indexOf('.') + 2), left: data[0].result['$' + cs.indexOf(c)] })
       }
       if (!data[1].ok) Swal.fire('错误', '请重新进入', 'error')
       if (data[1].result) {
@@ -69,14 +69,15 @@ async function getAll() {
   pageLoading = false
 }
 
-async function submit (c) {
+async function submit (i) {
   if (selected) return
   loading = true
   let cancel = false
-  const submitModel = { v: 'alpha', ':': [{ '#': 'data', '_': '?', '!': 0, ':': { [U.value.id]: 1 } }, { '#': 'enroll', ':': { ['$' + all.indexOf(c)]: { '_': 'DEC' } } }, { '#': 'data', ':': { [U.value.id]: c.name } }] }
+  const submitModel = { v: 'template', ':': 'eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCJ9.eyI6IjoiW3tcIiNcIjpcImNsdWJkYXRhXCIsXCJfXCI6XCI_XCIsXCIhXCI6MCxcIjpcIjp7XCIke2lkfVwiOjF9fSx7XCIjXCI6XCJjbHViXCIsXCI6XCI6e1wiJCR7aX1cIjp7XCJfXCI6XCJERUNcIn19fSx7XCIjXCI6XCJjbHViZGF0YVwiLFwiOlwiOntcIiR7aWR9XCI6XCIke2l9XCJ9fV0iLCI_IjpbImlkIiwiaSJdLCJuYmYiOjE2MzU5OTk2MDAwMDB9.nqIA_Zd9eFXj1_5GMpyz49-Zr2mMY3up9IpfKukYWez97aM5u09C2QwbY9Ek0m5ghLqIsITzb-Og2IF_qOuyc1uzMMDLnPoFbHkc3LO6E4BcbD7ABqQrLI0fDPDLFnVnaAl1w-QlNl019maoBVzv0bVr44zeq4U-3nDAJ_luanjR7Nuu86OZyJf4kQ7GExoooywpO3rWzwqYj4TSM9vT7NQBT0uQqYTUbzRMTaSH1IrNsKyUToYrKyU3Zt2wp_nYz6x5O0pWVRwqBcG9yIFKV0H5CRZeShRWA9X6hGmfyQ64Y-wElwgvwlDZuMdBVFytPCRz0M8L_9aqNcFKvJe3BQ', s: { id: U.value.id, i: String(i) } }
+  console.log(submitModel)
   await Swal.fire({
-    title: '确认选课吗？',
-    text: '您正在选择' + c.name,
+    title: '确认加入吗？',
+    text: '您即将加入' + all[i].name,
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: '确认',
@@ -89,13 +90,14 @@ async function submit (c) {
   if (!cancel) {
     await axios.post(url, submitModel, token())
     .then(({data}) => {
+      console.log(data)
       getAll()
       if (!data[0].ok) {
-        Swal.fire('错误', '请勿重复选课!', 'error')
+        Swal.fire('错误', '请勿重复加入社团!', 'error')
         return
       }
       if (!data[1].ok) {
-        Swal.fire('失败', '选课失败, 请查看剩余量是否充足', 'error')
+        Swal.fire('失败', '加入失败, 请查看剩余名额是否充足', 'error')
         getAll()
         return
       }
