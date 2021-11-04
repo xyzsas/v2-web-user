@@ -3,28 +3,31 @@
     <div class="title is-3">社团招新</div>
     <div class="note mb-3">本次社团招新为XYZSAS v3技术实验，请按照指示操作。<strong>请勿反复刷新！</strong></div>
     <div class="note mb-3"><strong>v3系统将不能集体重置密码，此后忘记学生事务系统密码须自行承担延误抢课与查分等功能的风险！</strong></div>
-    <div v-if="clock" class="mt-6">
-      <h1 class="title is-3" style="text-align: center;">社团招新尚未开始<br><code class="m-2">{{ clock }}</code></h1>
-      <p style="text-align: center;">倒计时结束后系统会自动载入数据</p>
+    <div v-if="!shut">
+      <div v-if="clock" class="mt-6">
+        <h1 class="title is-3" style="text-align: center;">社团招新尚未开始<br><code class="m-2">{{ clock }}</code></h1>
+        <p style="text-align: center;">倒计时结束后系统会自动载入数据</p>
+      </div>
+      <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock && all.length">
+        <thead>
+          <tr>
+            <th>社团名称</th>
+            <th style="min-width: 4rem;">剩余</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr v-for="(c, i) in all">
+            <th>{{ c.name }}</th>
+            <th>{{ c.left }}</th>
+            <th v-if="i != selected"><button class="button is-small is-info" :disabled="selected || c.left <= 0" :class="{ 'is-loading': loading, 'is-danger': c.left <= 0 }" @click="submit(c, i)">{{ c.left > 0 ? '加入' : '已满' }}</button></th>
+            <th v-else><button class="button is-small is-primary" disabled :class="{ 'is-loading': loading }">已加入</button></th>
+          </tr>
+        </tfoot>
+      </table>
+      <p v-if="pageLoading">正在加载社团信息, 请耐心等待...</p>
     </div>
-    <table class="table is-fullwidth m-0" v-if="!pageLoading && !clock && all.length">
-      <thead>
-        <tr>
-          <th>社团名称</th>
-          <th style="min-width: 4rem;">剩余</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr v-for="(c, i) in all">
-          <th>{{ c.name }}</th>
-          <th>{{ c.left }}</th>
-          <th v-if="i != selected"><button class="button is-small is-info" :disabled="selected || c.left <= 0" :class="{ 'is-loading': loading, 'is-danger': c.left <= 0 }" @click="submit(c, i)">{{ c.left > 0 ? '加入' : '已满' }}</button></th>
-          <th v-else><button class="button is-small is-primary" disabled :class="{ 'is-loading': loading }">已加入</button></th>
-        </tr>
-      </tfoot>
-    </table>
-    <p v-if="pageLoading">正在加载社团信息, 请耐心等待...</p>
+    <div v-else><h1 class="title is-3" style="text-align: center;">社团招新已结束</h1></div>
   </div>
 </template>
 
@@ -49,6 +52,7 @@ let selected = $ref(null)
 let loading = $ref(false)
 let pageLoading = $ref(false)
 let clock = $ref('Loading')
+let shut = $ref(true)
 
 async function getAll() {
   pageLoading = true
